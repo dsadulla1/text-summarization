@@ -1,0 +1,17 @@
+git clone git@gitlab.com:DeepakSadulla/text-summarization.git
+conda create -n text_summarizer python=3.6
+conda activate text_summarizer
+conda install pytorch torchvision cpuonly -c pytorch
+pip install streamlit
+pip install bert-extractive-summarizer
+pip install beautifulsoup4
+
+cd ~
+mkdir logs
+mkdir services
+
+nano /home/deepak/services/text_sum_service.sh --> Add "nohup /home/deepak/.conda/envs/text_summarizer/bin/streamlit run /home/deepak/Apps/text-summarization/app.py --server.port 8503 > /home/deepak/logs/text_sum_streamlit.log 2>&1 &"
+crontab -e -u deepak ---> Add "@reboot sh /home/deepak/services/text_sum_service.sh >> /home/deepak/logs/cronlog_text_sum.log 2>&1"
+#open port 8503 in Azure portal
+sh /home/deepak/services/text_sum_service.sh
+lsof -i:8503
